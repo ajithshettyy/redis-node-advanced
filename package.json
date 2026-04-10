@@ -1,0 +1,34 @@
+{
+  "name": "advanced-redis-learning",
+  "version": "1.0.0",
+  "description": "A comprehensive Node.js project to learn advanced Redis concepts",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "basics": "node examples/01-basics.js",
+    "caching": "node examples/02-caching.js",
+    "sessions": "node examples/03-sessions.js",
+    "pubsub": "node examples/04-pubsub.js",
+    "streams": "node examples/05-streams.js",
+    "sorted-sets": "node examples/06-sorted-sets.js",
+    "transactions": "node examples/07-transactions.js",
+    "hashes": "node examples/08-hashes.js",
+    "lists": "node examples/09-lists.js",
+    "sets": "node examples/10-sets.js",
+    "hyperloglog": "node examples/11-hyperloglog.js",
+    "geospatial": "node examples/12-geospatial.js",
+    "cluster": "node examples/13-cluster-intro.js",
+    "monitor": "node examples/14-monitoring.js"
+  },
+  "keywords": ["redis", "advanced", "learning", "nodejs"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "redis": "^4.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
