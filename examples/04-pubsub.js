@@ -83,13 +83,43 @@ try {
 
   // 5. Pub/Sub Channel Statistics
   console.log('\n5. Pub/Sub Statistics:');
-  const channels = await client.pubsub('CHANNELS');
-  const numSubscribers = await client.pubsub('NUMSUB', channels);
   
-  console.log(`✓ Active channels: ${channels.join(', ')}`);
-  console.log(`✓ Subscribers per channel:`);
-  for (let i = 0; i < channels.length; i += 2) {
-    console.log(`    ${channels[i]}: ${numSubscribers[i + 1]} subscribers`);
+  // Query actual Redis subscription data
+  try {
+    // Get all active channels with subscribers
+    const channels = await client.sendCommand(['PUBSUB', 'CHANNELS']);
+    console.log('✓ Active Channels (from Redis server):');
+    if (channels && channels.length > 0) {
+      channels.forEach((channel) => {
+        console.log(`    ${channel}`);
+      });
+    } else {
+      console.log('    (no channels found)');
+    }
+
+    // Get subscriber count for specific channels
+    if (channels && channels.length > 0) {
+      const numsub = await client.sendCommand(['PUBSUB', 'NUMSUB', ...channels]);
+      console.log('✓ Subscribers per channel:');
+      for (let i = 0; i < numsub.length; i += 2) {
+        console.log(`    ${numsub[i]}: ${numsub[i + 1]} subscriber(s)`);
+      }
+    }
+
+    // Get number of pattern subscriptions
+    const numpat = await client.sendCommand(['PUBSUB', 'NUMPAT']);
+    console.log(`✓ Pattern Subscriptions: ${numpat}`);
+    
+    console.log(`✓ Total subscriptions tracked: ${(channels?.length || 0) + numpat}`);
+  } catch (err) {
+    console.log('Note: Direct Redis subscription queries may require admin access');
+    console.log('Local tracking:');
+    activeSubscriptions.channels.forEach((channel) => {
+      console.log(`    ${channel}: 1 subscriber`);
+    });
+    activeSubscriptions.patterns.forEach((pattern) => {
+      console.log(`    ${pattern}: 1 subscriber`);
+    });
   }
 
   // 6. Pub/Sub for Real-Time Notifications
